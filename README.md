@@ -1,65 +1,65 @@
-# Investment Management System
+# Sistema de Gerenciamento de Investimentos
 
-This project is a **Java-based Investment Management System** designed to manage users, banks, bank accounts, and investments. It provides a command-line interface (CLI) for users to interact with the system and perform various operations such as user registration, bank account creation, and investment management.
+Este projeto é um **Sistema de Gerenciamento de Investimentos baseado em Java** projetado para gerenciar usuários, bancos, contas bancárias e investimentos. Ele fornece uma interface de linha de comando (CLI) para os usuários interagirem com o sistema e realizarem várias operações, como registro de usuários, criação de contas bancárias e gerenciamento de investimentos.
 
-## Features
+## Funcionalidades
 
-### User Management
-- Register new users with name, email, and password.
-- List all registered users with pagination.
-- Search for a user by email.
+### Gerenciamento de Usuários
+- Registrar novos usuários com nome, e-mail e senha.
+- Listar todos os usuários registrados com paginação.
+- Pesquisar um usuário pelo e-mail.
 
-### Bank and Account Management
-- Add new banks with name and code.
-- Search for banks by name or initials.
-- Create bank accounts for registered users.
-- List and view details of bank accounts.
+### Gerenciamento de Bancos e Contas
+- Adicionar novos bancos com nome e código.
+- Pesquisar bancos pelo nome ou iniciais.
+- Criar contas bancárias para usuários registrados.
+- Listar e visualizar detalhes das contas bancárias.
 
-### Investment Management
-- Register new investments.
-- Make contributions (aportes) to investments.
-- View investment goals and long-term balances.
+### Gerenciamento de Investimentos
+- Registrar novos investimentos.
+- Fazer aportes em investimentos.
+- Visualizar objetivos de investimento e saldos de longo prazo.
 
-## Project Structure
+## Estrutura do Projeto
 
-The project follows a modular structure with the following key components:
+O projeto segue uma estrutura modular com os seguintes componentes principais:
 
-- **DAO Layer**: Handles database operations (e.g., `ContaBancariaDao`, `UsuarioDao`).
-- **Service Layer**: Contains business logic (e.g., `UsuarioService`, `BancosService`).
-- **Model Layer**: Represents the data models (e.g., `Usuario`, `Banco`, `ContaBancaria`).
-- **Menu**: Provides a CLI for user interaction (`Menu.java`).
-- **Exceptions**: Custom exceptions for error handling (e.g., `UserNotFoundException`).
+- **Camada DAO**: Lida com operações no banco de dados (ex.: `ContaBancariaDao`, `UsuarioDao`).
+- **Camada de Serviço**: Contém a lógica de negócios (ex.: `UsuarioService`, `BancosService`).
+- **Camada de Modelo**: Representa os modelos de dados (ex.: `Usuario`, `Banco`, `ContaBancaria`).
+- **Menu**: Fornece uma CLI para interação do usuário (`Menu.java`).
+- **Exce��ões**: Exceções personalizadas para tratamento de erros (ex.: `UserNotFoundException`).
 
-## Technologies Used
+## Tecnologias Utilizadas
 
-- **Programming Language**: Java
-- **Build Tool**: Maven
-- **Database**: Oracle Database
+- **Linguagem de Programação**: Java
+- **Ferramenta de Build**: Maven
+- **Banco de Dados**: Oracle Database
 - **IDE**: IntelliJ IDEA
 
-## Database Configuration
+## Configuração do Banco de Dados
 
-This project uses **Oracle Database** for data storage. Below are the steps to configure the database:
+Este projeto utiliza o **Oracle Database** para armazenamento de dados. Abaixo estão os passos para configurar o banco de dados:
 
-1. **Set Up Oracle Database**:
-    - Install and configure Oracle Database.
-    - Create a database schema for the application.
+1. **Configurar o Oracle Database**:
+   - Instale e configure o Oracle Database.
+   - Crie um esquema de banco de dados para a aplicação.
 
-2. **Update Database Connection**:
-    - Configure the connection details in the `ConnectionFactory` class:
-      ```java
-      private static final String URL = "jdbc:oracle:thin:@<host>:<port>:<service_name>";
-      private static final String USER = "<username>";
-      private static final String PASSWORD = "<password>";
-      ```
-      Replace `<host>`, `<port>`, `<service_name>`, `<username>`, and `<password>` with your Oracle Database details.
+2. **Atualizar a Conexão com o Banco de Dados**:
+   - Configure os detalhes da conexão na classe `ConnectionFactory`:
+     ```java
+     private static final String URL = "jdbc:oracle:thin:@<host>:<port>:<service_name>";
+     private static final String USER = "<username>";
+     private static final String PASSWORD = "<password>";
+     ```
+     Substitua `<host>`, `<port>`, `<service_name>`, `<username>` e `<password>` pelos detalhes do seu Oracle Database.
 
-3. **SQL Scripts**:
-    - Use the provided SQL scripts to create the necessary tables. Ensure the syntax is compatible with Oracle (e.g., `VARCHAR2`, `SYSDATE`).
+3. **Scripts SQL**:
+   - Utilize os scripts SQL fornecidos para criar as tabelas necessárias. Certifique-se de que a sintaxe seja compatível com o Oracle (ex.: `VARCHAR2`, `SYSDATE`).
 
-## How to Run
+## Como Executar
 
-1. **Clone the Repository**:
+1. **Clonar o Repositório**:
    ```bash
    git clone <repository-url>
    cd <repository-folder>
