@@ -8,12 +8,12 @@ public class ContaBancaria {
     private String tipo;
     private Usuario usuario;
     private String conta;
-    private int digitoConta;
+    private Integer digitoConta;
     private String agencia;
-    private int digitoAgencia;
+    private Integer digitoAgencia;
     private Banco banco;
 
-    public ContaBancaria(String nome, String tipo, Usuario usuario, String conta, int digitoConta, String agencia, int digitoAgencia, Banco banco) {
+    public ContaBancaria(String nome, String tipo, Usuario usuario, String conta, Integer digitoConta, String agencia, Integer digitoAgencia, Banco banco) {
         this.id = UUID.randomUUID().toString();
         this.nome = nome;
         this.tipo = tipo;
@@ -25,7 +25,7 @@ public class ContaBancaria {
         this.banco = banco;
     }
 
-    public ContaBancaria(String id, String nome, String tipo, Usuario usuario, String conta, int digitoConta, String agencia, int digitoAgencia, Banco banco) {
+    public ContaBancaria(String id, String nome, String tipo, Usuario usuario, String conta, Integer digitoConta, String agencia, Integer digitoAgencia, Banco banco) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;

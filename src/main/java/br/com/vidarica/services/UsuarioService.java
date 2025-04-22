@@ -76,4 +76,22 @@ public class UsuarioService {
 
         return usuario;
     }
+
+    public static Usuario consultarUsuarioPorId(String id) throws SQLException, UserNotFoundException {
+        UsuarioDao usuarioDao = new UsuarioDao();
+        Usuario usuario = usuarioDao.getUsuario("id", id);
+
+        if (usuario != null) {
+            System.out.println("=== Detalhes do Usuário ===");
+            System.out.println("ID: " + usuario.getId());
+            System.out.println("Nome: " + usuario.getNome());
+            System.out.println("Email: " + usuario.getEmail());
+            usuarioDao.close();
+        } else {
+            System.out.println("Usuário não encontrado.");
+            throw new UserNotFoundException("Usuário não encontrado.");
+        }
+
+        return usuario;
+    }
 }

@@ -1,10 +1,19 @@
 package br.com.vidarica.model;
 
+import java.util.UUID;
+
 public class GastoFixo {
     private String id;
     private String nome;
     private double valor;
     private Usuario usuario;
+
+    public GastoFixo(String nome, double valor, Usuario usuario) {
+        this.id = UUID.randomUUID().toString();
+        this.nome = nome;
+        this.valor = valor;
+        this.usuario = usuario;
+    }
 
     public GastoFixo(String id, String nome, double valor, Usuario usuario) {
         this.id = id;

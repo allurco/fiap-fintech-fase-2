@@ -78,8 +78,7 @@ public class BancoDao {
     public Banco buscarBanco(String field, String value) throws SQLException {
         String sql = "SELECT * FROM bancos WHERE " + field + " = ?";
         this.statement = connection.prepareStatement(sql);
-        this.statement.setString(1, field);
-        this.statement.setString(2, value);
+        this.statement.setString(1, value);
         ResultSet rs = this.statement.executeQuery();
 
         if (rs.next()) {

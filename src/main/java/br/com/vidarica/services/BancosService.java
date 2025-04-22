@@ -60,12 +60,31 @@ public class BancosService {
 
     }
 
-    public static void criarContaBancaria(Usuario usuario, Banco banco, String nome, String Tipo, String agencia, int DigitoAgencia, String conta, int DigitoConta) throws SQLException {
+    public static void criarContaBancaria(Usuario usuario, Banco banco, String nome, String Tipo, String agencia, Integer DigitoAgencia, String conta, int DigitoConta) throws SQLException {
 
         ContaBancaria contaBancaria = new ContaBancaria(nome, Tipo, usuario, conta, DigitoConta, agencia, DigitoAgencia, banco);
         ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
         contaBancariaDao.criarContaBancaria(contaBancaria);
         System.out.println("Conta bancária criada com sucesso!");
 
+    }
+
+    public static List<ContaBancaria> listarContasBancarias(Usuario usuario) throws SQLException {
+        ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
+        List<ContaBancaria> contas = contaBancariaDao.listarContas(usuario);
+        if (contas != null) {
+            System.out.println("=== Lista de Contas Bancárias ===");
+            for (ContaBancaria conta : contas) {
+                System.out.println("ID: " + conta.getId());
+                System.out.println("Nome: " + conta.getNome());
+                System.out.println("Banco: " + conta.getBanco().getNome());
+                System.out.println("Agência: " + conta.getAgencia());
+                System.out.println("Conta: " + conta.getConta());
+                System.out.println("-------------------------");
+            }
+        } else {
+            System.out.println("Nenhuma conta bancária encontrada.");
+        }
+        return contas;
     }
 }

@@ -4,6 +4,7 @@ import br.com.vidarica.exceptions.UserNotFoundException;
 import br.com.vidarica.model.Banco;
 import br.com.vidarica.model.Usuario;
 import br.com.vidarica.services.BancosService;
+import br.com.vidarica.services.DespesasService;
 import br.com.vidarica.services.UsuarioService;
 
 import java.util.List;
@@ -20,10 +21,8 @@ public class Menu {
             System.out.println("Escolha uma opção:");
             System.out.println("1. Gestão de Usuários");
             System.out.println("2. Gestão de Bancos e Contas");
-            System.out.println("5. Cadastrar Investimento");
-            System.out.println("6. Realizar Aporte");
-            System.out.println("7. Consultar Investimentos");
-            System.out.println("8. Consultar Aportes");
+            System.out.println("3. Gestão de Despesas");
+            System.out.println("4. Gestão de Investimentos");
             System.out.println("0. Sair");
 
             opcao = scanner.nextInt();
@@ -31,6 +30,7 @@ public class Menu {
             switch (opcao) {
                 case 1:
                     this.usuarioSubmenu();
+                    break;
                 case 2:
                     this.bancosSubMenu();
                     break;
@@ -55,6 +55,7 @@ public class Menu {
         System.out.println("1. Cadastrar Usuário");
         System.out.println("2. Listar Usuários");
         System.out.println("3. Listar Informações de um Usuário");
+        System.out.println("0. Voltar ao menu principal");
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
@@ -73,8 +74,9 @@ public class Menu {
                     break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
-                    this.exibirMenuPrincipal();
                     break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
             }
         }
     }
@@ -112,8 +114,9 @@ public class Menu {
                     break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
-                    this.exibirMenuPrincipal();
                     break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
 
             }
         }
@@ -147,8 +150,9 @@ public class Menu {
                     break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
-                    this.exibirMenuPrincipal();
                     break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
 
             }
         }
@@ -157,10 +161,10 @@ public class Menu {
     private void despesasSubMenu()
     {
         System.out.println("=== Submenu de Investimentos ===");
-        System.out.println("1. Cadastrar Investimento");
-        System.out.println("2. Fazer Aporte");
-        System.out.println("3. Consultar Objetivo");
-        System.out.println("4. Ver Saldo Longo Prazo");
+        System.out.println("1. Cadastrar Despesa");
+        System.out.println("2. Listar Despesas");
+        System.out.println("3. Total Despesas");
+        System.out.println("0. Voltar ao menu principal");
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
@@ -169,21 +173,19 @@ public class Menu {
             opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
-                    this.cadastrarInvestimento();
+                    this.cadastrarDespesa();
                     break;
                 case 2:
-                    this.fazerAporte();
+                    this.listarDespeas();
                     break;
                 case 3:
-                    this.consultarObjetivos();
-                    break;
-                case 4:
-                    this.verSaldoLongoPrazo();
+                    this.totalDespesas();
                     break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
-                    this.exibirMenuPrincipal();
                     break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
 
             }
         }
@@ -271,16 +273,19 @@ public class Menu {
             int opcaoEscolhida = scanner.nextInt();
             Banco bancoEscolhido = bancos.get(opcaoEscolhida - 1);
             System.out.println("Nome: ");
+            scanner.nextLine(); // Limpar o buffer do scanner
             String nome = scanner.nextLine();
             System.out.println("Agência: ");
             String agencia = scanner.nextLine();
             System.out.println("Dígito da Agência: (opcional): ");
-            int digitoAgencia = scanner.nextInt();
+            String digitoAgenciaInput = scanner.nextLine();
+            Integer digitoAgencia = digitoAgenciaInput.isEmpty() ? null : Integer.parseInt(digitoAgenciaInput);
             System.out.println("Número da Conta: ");
             String numeroConta = scanner.nextLine();
             System.out.println("Dígito da Conta: ");
             int digitoConta = scanner.nextInt();
             System.out.println("Tipo de Conta (Corrente/Poupança): ");
+            scanner.nextLine(); // Limpar o buffer do scanner
             String tipoConta = scanner.nextLine();
             try {
                 BancosService.criarContaBancaria(usuario, bancoEscolhido, nome, tipoConta, agencia, digitoAgencia, numeroConta, digitoConta);
@@ -331,7 +336,23 @@ public class Menu {
         BancosService.procurarBanco(termo);
     }
 
-    private void listarContas() {}
+    private void listarContas() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Listar Contas Bancárias ===");
+        System.out.print("Digite o Email do usuário para listar as contas: ");
+        String email = scanner.nextLine();
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+            BancosService.listarContasBancarias(usuario);
+
+            System.out.println("Voltando ao menu de contas...");
+            this.bancosSubMenu();
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println("Erro ao listar contas: " + e.getMessage());
+        }
+    }
 
     private void consultarConta() {}
 
@@ -342,6 +363,69 @@ public class Menu {
     private void consultarObjetivos() {}
 
     private void verSaldoLongoPrazo() {
+
+    }
+
+    private void cadastrarDespesa() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Cadastro de Despesa ===");
+        System.out.print("Digite o email do usuário: ");
+        String email = scanner.nextLine();
+
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Valor: ");
+            double valor = scanner.nextDouble();
+
+            DespesasService.registrarDespesa(nome, valor, usuario);
+
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar despesa: " + e.getMessage());
+        }
+
+        this.despesasSubMenu();
+
+
+        // Aqui você pode adicionar a lógica para salvar a despesa no banco de dados ou em uma lista
+    }
+    private void listarDespeas() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Listar Despesas ===");
+        System.out.print("Digite o email do usuário: ");
+        String email = scanner.nextLine();
+
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+            DespesasService.listarDespesas(usuario);
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println("Erro ao listar despesas: " + e.getMessage());
+        }
+
+        this.despesasSubMenu();
+
+    }
+    private void totalDespesas() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Total de Despesas ===");
+        System.out.print("Digite o email do usuário: ");
+        String email = scanner.nextLine();
+
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+            DespesasService.totalDespesas(usuario);
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println("Erro ao calcular total de despesas: " + e.getMessage());
+        }
+
+        this.despesasSubMenu();
 
     }
 }
