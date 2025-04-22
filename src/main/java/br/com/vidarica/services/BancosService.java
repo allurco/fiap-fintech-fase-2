@@ -2,6 +2,8 @@ package br.com.vidarica.services;
 
 import br.com.vidarica.dao.BancoDao;
 import br.com.vidarica.dao.ContaBancariaDao;
+import br.com.vidarica.exceptions.BancoDaoException;
+import br.com.vidarica.exceptions.ContaBancariaDaoException;
 import br.com.vidarica.model.Banco;
 import br.com.vidarica.model.ContaBancaria;
 import br.com.vidarica.model.Usuario;
@@ -25,8 +27,8 @@ public class BancosService {
             System.out.println("Nome: " + banco.getNome());
             System.out.println("Código: " + banco.getCodigo());
             bancoDao.close();
-        } catch (Exception $e) {
-            System.out.println("Erro ao cadastrar banco: " + $e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar banco: " + e.getMessage());
         }
 
     }
@@ -35,8 +37,8 @@ public class BancosService {
         try {
             BancoDao bancoDao = new BancoDao();
             return bancoDao.listarBancos();
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar bancos: " + e.getMessage());
+        } catch (BancoDaoException e) {
+            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -54,22 +56,26 @@ public class BancosService {
             } else {
                 System.out.println("Banco não encontrado.");
             }
-        } catch (Exception e) {
-            System.out.println("Banco não encontrado: "+e.getMessage());
+        } catch (BancoDaoException e) {
+            System.out.println(e.getMessage());
         }
 
     }
 
-    public static void criarContaBancaria(Usuario usuario, Banco banco, String nome, String Tipo, String agencia, Integer DigitoAgencia, String conta, int DigitoConta) throws SQLException {
-
-        ContaBancaria contaBancaria = new ContaBancaria(nome, Tipo, usuario, conta, DigitoConta, agencia, DigitoAgencia, banco);
-        ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
-        contaBancariaDao.criarContaBancaria(contaBancaria);
-        System.out.println("Conta bancária criada com sucesso!");
+    public static void criarContaBancaria(Usuario usuario, Banco banco, String nome, String Tipo, String agencia, Integer DigitoAgencia, String conta, int DigitoConta) {
+        try {
+            ContaBancaria contaBancaria = new ContaBancaria(nome, Tipo, usuario, conta, DigitoConta, agencia, DigitoAgencia, banco);
+            ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
+            contaBancariaDao.criarContaBancaria(contaBancaria);
+            System.out.println("Conta bancária criada com sucesso!");
+        } catch (ContaBancariaDaoException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
-    public static List<ContaBancaria> listarContasBancarias(Usuario usuario) throws SQLException {
+    public static List<ContaBancaria> listarContasBancarias(Usuario usuario) {
+
         ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
         List<ContaBancaria> contas = contaBancariaDao.listarContas(usuario);
         if (contas != null) {

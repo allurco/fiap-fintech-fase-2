@@ -51,16 +51,18 @@ public class Menu {
 
     private void usuarioSubmenu()
     {
-        System.out.println("=== Submenu de Usuário ===");
-        System.out.println("1. Cadastrar Usuário");
-        System.out.println("2. Listar Usuários");
-        System.out.println("3. Listar Informações de um Usuário");
-        System.out.println("0. Voltar ao menu principal");
+
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
 
         while (opcao != 0) {
+            System.out.println("=== Submenu de Usuário ===");
+            System.out.println("1. Cadastrar Usuário");
+            System.out.println("2. Listar Usuários");
+            System.out.println("3. Listar Informações de um Usuário");
+            System.out.println("0. Voltar ao menu principal");
+
             opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
@@ -83,18 +85,20 @@ public class Menu {
 
     private void bancosSubMenu()
     {
-        System.out.println("=== Submenu de Bancos e Contas ===");
-        System.out.println("1. Cadastrar Banco");
-        System.out.println("2. Buscar Banco");
-        System.out.println("3. Cadastrar Conta");
-        System.out.println("4. Listar Contas");
-        System.out.println("5. Consultar Conta");
-        System.out.println("0. Voltar ao menu principal");
+
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
 
         while (opcao != 0) {
+            System.out.println("=== Submenu de Bancos e Contas ===");
+            System.out.println("1. Cadastrar Banco");
+            System.out.println("2. Buscar Banco");
+            System.out.println("3. Cadastrar Conta");
+            System.out.println("4. Listar Contas");
+            System.out.println("5. Consultar Conta");
+            System.out.println("0. Voltar ao menu principal");
+
             opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
@@ -124,16 +128,19 @@ public class Menu {
 
     private void investimentosSubMenu()
     {
-        System.out.println("=== Submenu de Investimentos ===");
-        System.out.println("1. Cadastrar Investimento");
-        System.out.println("2. Fazer Aporte");
-        System.out.println("3. Consultar Objetivo");
-        System.out.println("4. Ver Saldo Longo Prazo");
+
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
 
         while (opcao != 0) {
+            System.out.println("=== Submenu de Investimentos ===");
+            System.out.println("1. Cadastrar Investimento");
+            System.out.println("2. Fazer Aporte");
+            System.out.println("3. Consultar Objetivo");
+            System.out.println("4. Ver Saldo Longo Prazo");
+            System.out.println("0. Voltar ao menu principal");
+
             opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
@@ -160,16 +167,18 @@ public class Menu {
 
     private void despesasSubMenu()
     {
-        System.out.println("=== Submenu de Investimentos ===");
-        System.out.println("1. Cadastrar Despesa");
-        System.out.println("2. Listar Despesas");
-        System.out.println("3. Total Despesas");
-        System.out.println("0. Voltar ao menu principal");
+
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
 
         while (opcao != 0) {
+            System.out.println("=== Submenu de Investimentos ===");
+            System.out.println("1. Cadastrar Despesa");
+            System.out.println("2. Listar Despesas");
+            System.out.println("3. Total Despesas");
+            System.out.println("0. Voltar ao menu principal");
+
             opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
@@ -202,7 +211,6 @@ public class Menu {
         String senha = scanner.nextLine();
 
         UsuarioService.cadastrarUsuario(nome, email, senha);
-        this.usuarioSubmenu();
     }
 
     private void listarUsuarios() {
@@ -231,7 +239,6 @@ public class Menu {
         }
 
         System.out.println("Voltando ao menu de usuários...");
-        this.usuarioSubmenu();
 
     }
 
@@ -243,10 +250,10 @@ public class Menu {
         String email = scanner.nextLine();
         try {
             UsuarioService.consultarUsuarioPorEmail(email);
-            this.usuarioSubmenu();
         } catch (Exception e) {
             System.out.println("Algo de errado não está certo " + e.getMessage());
         }
+
 
     }
 
@@ -300,14 +307,12 @@ public class Menu {
                 this.cadastrarUsuario();
             } else {
                 System.out.println("Voltando ao menu de contas...");
-                this.bancosSubMenu();
             }
             return;
         } catch (Exception e) {
             System.out.println("Erro ao cadastrar conta: " + e.getMessage());
         } finally {
             System.out.println("Voltando ao menu de contas...");
-            this.bancosSubMenu();
         }
 
 
@@ -322,7 +327,6 @@ public class Menu {
         String codigo = scanner.nextLine();
         try {
             BancosService.adicionarBanco(nome, codigo);
-            this.bancosSubMenu();
         } catch (Exception e) {
             System.out.println("Erro ao cadastrar banco: " + e.getMessage());
         }
@@ -346,7 +350,6 @@ public class Menu {
             BancosService.listarContasBancarias(usuario);
 
             System.out.println("Voltando ao menu de contas...");
-            this.bancosSubMenu();
         } catch (UserNotFoundException e) {
             System.out.println("Usuário não encontrado. Tente outro email. ");
         } catch (Exception e) {
@@ -387,7 +390,6 @@ public class Menu {
             System.out.println("Erro ao cadastrar despesa: " + e.getMessage());
         }
 
-        this.despesasSubMenu();
 
 
         // Aqui você pode adicionar a lógica para salvar a despesa no banco de dados ou em uma lista
@@ -407,7 +409,6 @@ public class Menu {
             System.out.println("Erro ao listar despesas: " + e.getMessage());
         }
 
-        this.despesasSubMenu();
 
     }
     private void totalDespesas() {
@@ -425,7 +426,6 @@ public class Menu {
             System.out.println("Erro ao calcular total de despesas: " + e.getMessage());
         }
 
-        this.despesasSubMenu();
 
     }
 }

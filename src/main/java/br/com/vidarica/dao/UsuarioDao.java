@@ -1,8 +1,8 @@
 package br.com.vidarica.dao;
 
+import br.com.vidarica.exceptions.UsuarioDaoException;
 import br.com.vidarica.factories.ConnectionFactory;
 import br.com.vidarica.model.Usuario;
-import com.password4j.Password;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -86,25 +86,29 @@ public class UsuarioDao {
         return 0;
     }
 
-    public List<Usuario> getAllUsuarios(int pageSize, int offset) throws SQLException {
-        String sql = "SELECT * FROM usuarios ORDER BY nome OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        this.statement = connection.prepareStatement(sql);
-        this.statement.setInt(1, offset);
-        this.statement.setInt(2, pageSize);
-        List<Usuario> usuarios = new ArrayList<>();
+    public List<Usuario> getAllUsuarios(int pageSize, int offset) throws UsuarioDaoException {
+        try {
+            String sql = "SELECT * FROM usuarios ORDER BY nome OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            this.statement = connection.prepareStatement(sql);
+            this.statement.setInt(1, offset);
+            this.statement.setInt(2, pageSize);
+            List<Usuario> usuarios = new ArrayList<>();
 
-        ResultSet rs = this.statement.executeQuery();
+            ResultSet rs = this.statement.executeQuery();
 
-        while (rs.next()) {
-            String idUsuario = rs.getString("id");
-            String nome = rs.getString("nome");
-            String email = rs.getString("email");
-            String password = rs.getString("password");
+            while (rs.next()) {
+                String idUsuario = rs.getString("id");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
 
-            usuarios.add(new Usuario(idUsuario, nome, email, password));
+                usuarios.add(new Usuario(idUsuario, nome, email, password));
+            }
+
+            return usuarios;
+        } catch (SQLException e) {
+            throw new UsuarioDaoException(e.getMessage());
         }
-
-        return usuarios;
     }
 
     public void close() throws SQLException {
