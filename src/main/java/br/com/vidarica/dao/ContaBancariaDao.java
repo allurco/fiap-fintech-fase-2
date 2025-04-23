@@ -30,10 +30,12 @@ public class ContaBancariaDao {
         try {
             if (this.statement != null) {
                 this.statement.close();
+
+                if (this.connection != null) {
+                    this.connection.close();
+                }
             }
-            if (this.connection != null) {
-                this.connection.close();
-            }
+
         } catch (SQLException e) {
             throw new ContaBancariaDaoException("Erro ao fechar conexão: " + e.getMessage());
         }

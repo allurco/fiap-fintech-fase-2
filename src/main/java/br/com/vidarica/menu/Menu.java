@@ -22,7 +22,6 @@ public class Menu {
             System.out.println("1. Gestão de Usuários");
             System.out.println("2. Gestão de Bancos e Contas");
             System.out.println("3. Gestão de Despesas");
-            System.out.println("4. Gestão de Investimentos");
             System.out.println("0. Sair");
 
             opcao = scanner.nextInt();
@@ -36,9 +35,6 @@ public class Menu {
                     break;
                 case 3:
                     this.despesasSubMenu();
-                    break;
-                case 4:
-                    this.investimentosSubMenu();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -113,48 +109,6 @@ public class Menu {
                 case 4:
                     this.listarContas();
                     break;
-                case 5:
-                    this.consultarConta();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-
-            }
-        }
-    }
-
-    private void investimentosSubMenu()
-    {
-
-
-        Scanner scanner = new Scanner(System.in);
-        int opcao = -1;
-
-        while (opcao != 0) {
-            System.out.println("=== Submenu de Investimentos ===");
-            System.out.println("1. Cadastrar Investimento");
-            System.out.println("2. Fazer Aporte");
-            System.out.println("3. Consultar Objetivo");
-            System.out.println("4. Ver Saldo Longo Prazo");
-            System.out.println("0. Voltar ao menu principal");
-
-            opcao = scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    this.cadastrarInvestimento();
-                    break;
-                case 2:
-                    this.fazerAporte();
-                    break;
-                case 3:
-                    this.consultarObjetivos();
-                    break;
-                case 4:
-                    this.verSaldoLongoPrazo();
-                    break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
                     break;
@@ -185,7 +139,7 @@ public class Menu {
                     this.cadastrarDespesa();
                     break;
                 case 2:
-                    this.listarDespeas();
+                    this.listarDespesas();
                     break;
                 case 3:
                     this.totalDespesas();
@@ -222,6 +176,7 @@ public class Menu {
         int pageNumber = scanner.nextInt();
 
         this.listarUsuarios(pageSize, pageNumber);
+
     }
 
     private void listarUsuarios(int pageSize, int pageNumber) {
@@ -238,8 +193,6 @@ public class Menu {
             }
         }
 
-        System.out.println("Voltando ao menu de usuários...");
-
     }
 
     private void consultarUsuario()
@@ -250,7 +203,7 @@ public class Menu {
         String email = scanner.nextLine();
         try {
             UsuarioService.consultarUsuarioPorEmail(email);
-        } catch (Exception e) {
+        } catch (UserNotFoundException e) {
             System.out.println("Algo de errado não está certo " + e.getMessage());
         }
 
@@ -294,12 +247,10 @@ public class Menu {
             System.out.println("Tipo de Conta (Corrente/Poupança): ");
             scanner.nextLine(); // Limpar o buffer do scanner
             String tipoConta = scanner.nextLine();
-            try {
-                BancosService.criarContaBancaria(usuario, bancoEscolhido, nome, tipoConta, agencia, digitoAgencia, numeroConta, digitoConta);
-                System.out.println("Conta criada com sucesso!");
-            } catch (Exception e) {
-                System.out.println("Erro ao criar conta: " + e.getMessage());
-            }
+
+            BancosService.criarContaBancaria(usuario, bancoEscolhido, nome, tipoConta, agencia, digitoAgencia, numeroConta, digitoConta);
+            System.out.println("Conta criada com sucesso!");
+
         } catch (UserNotFoundException e) {
             System.out.println("Usuário não encontrado, quer adicioná-o primeiro? (s/n) ");
             String resposta = scanner.nextLine();
@@ -308,9 +259,6 @@ public class Menu {
             } else {
                 System.out.println("Voltando ao menu de contas...");
             }
-            return;
-        } catch (Exception e) {
-            System.out.println("Erro ao cadastrar conta: " + e.getMessage());
         } finally {
             System.out.println("Voltando ao menu de contas...");
         }
@@ -325,11 +273,9 @@ public class Menu {
         String nome = scanner.nextLine();
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
-        try {
-            BancosService.adicionarBanco(nome, codigo);
-        } catch (Exception e) {
-            System.out.println("Erro ao cadastrar banco: " + e.getMessage());
-        }
+
+        BancosService.adicionarBanco(nome, codigo);
+
     }
 
     private void buscarBanco() {
@@ -357,18 +303,6 @@ public class Menu {
         }
     }
 
-    private void consultarConta() {}
-
-    private void cadastrarInvestimento() {}
-
-    private void fazerAporte() {}
-
-    private void consultarObjetivos() {}
-
-    private void verSaldoLongoPrazo() {
-
-    }
-
     private void cadastrarDespesa() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Cadastro de Despesa ===");
@@ -394,7 +328,7 @@ public class Menu {
 
         // Aqui você pode adicionar a lógica para salvar a despesa no banco de dados ou em uma lista
     }
-    private void listarDespeas() {
+    private void listarDespesas() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Listar Despesas ===");
         System.out.print("Digite o email do usuário: ");

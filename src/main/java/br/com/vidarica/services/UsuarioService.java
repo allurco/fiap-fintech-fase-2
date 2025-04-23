@@ -2,9 +2,8 @@ package br.com.vidarica.services;
 
 import br.com.vidarica.dao.UsuarioDao;
 import br.com.vidarica.exceptions.UserNotFoundException;
+import br.com.vidarica.exceptions.UsuarioDaoException;
 import br.com.vidarica.model.Usuario;
-
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,39 +58,54 @@ public class UsuarioService {
 
     }
 
-    public static Usuario consultarUsuarioPorEmail(String email) throws SQLException, UserNotFoundException {
-        UsuarioDao usuarioDao = new UsuarioDao();
-        Usuario usuario = usuarioDao.getUsuario("email", email);
+    public static Usuario consultarUsuarioPorEmail(String email) throws UserNotFoundException {
+        try {
 
-        if (usuario != null) {
-            System.out.println("=== Detalhes do Usuário ===");
-            System.out.println("ID: " + usuario.getId());
-            System.out.println("Nome: " + usuario.getNome());
-            System.out.println("Email: " + usuario.getEmail());
-            usuarioDao.close();
-        } else {
-            System.out.println("Usuário não encontrado.");
-            throw new UserNotFoundException("Usuário não encontrado.");
+            UsuarioDao usuarioDao = new UsuarioDao();
+            Usuario usuario = usuarioDao.getUsuario("email", email);
+
+            return getUsuario(usuarioDao, usuario);
+        } catch (UsuarioDaoException e) {
+            System.out.println("Erro ao consultar usuário: " + e.getMessage());
         }
 
-        return usuario;
+        return null;
     }
 
-    public static Usuario consultarUsuarioPorId(String id) throws SQLException, UserNotFoundException {
-        UsuarioDao usuarioDao = new UsuarioDao();
-        Usuario usuario = usuarioDao.getUsuario("id", id);
+    public static Usuario consultarUsuarioPorId(String id) throws UserNotFoundException {
+        try {
 
-        if (usuario != null) {
-            System.out.println("=== Detalhes do Usuário ===");
-            System.out.println("ID: " + usuario.getId());
-            System.out.println("Nome: " + usuario.getNome());
-            System.out.println("Email: " + usuario.getEmail());
-            usuarioDao.close();
-        } else {
-            System.out.println("Usuário não encontrado.");
-            throw new UserNotFoundException("Usuário não encontrado.");
+            UsuarioDao usuarioDao = new UsuarioDao();
+            Usuario usuario = usuarioDao.getUsuario("id", id);
+
+            return getUsuario(usuarioDao, usuario);
+
+        } catch (UsuarioDaoException e) {
+            System.out.println("Erro ao consultar usuário: " + e.getMessage());
         }
 
-        return usuario;
+        return null;
+    }
+
+    private static Usuario getUsuario(UsuarioDao usuarioDao, Usuario usuario) throws UserNotFoundException {
+        try {
+
+            if (usuario != null) {
+                System.out.println("=== Detalhes do Usuário ===");
+                System.out.println("ID: " + usuario.getId());
+                System.out.println("Nome: " + usuario.getNome());
+                System.out.println("Email: " + usuario.getEmail());
+                usuarioDao.close();
+            } else {
+                System.out.println("Usuário não encontrado.");
+                throw new UserNotFoundException("Usuário não encontrado.");
+            }
+
+            return usuario;
+        } catch (UsuarioDaoException e) {
+            System.out.println("Erro ao consultar usuário: " + e.getMessage());
+        }
+
+        return null;
     }
 }

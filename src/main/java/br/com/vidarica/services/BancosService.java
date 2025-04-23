@@ -75,22 +75,27 @@ public class BancosService {
     }
 
     public static List<ContaBancaria> listarContasBancarias(Usuario usuario) {
-
-        ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
-        List<ContaBancaria> contas = contaBancariaDao.listarContas(usuario);
-        if (contas != null) {
-            System.out.println("=== Lista de Contas Bancárias ===");
-            for (ContaBancaria conta : contas) {
-                System.out.println("ID: " + conta.getId());
-                System.out.println("Nome: " + conta.getNome());
-                System.out.println("Banco: " + conta.getBanco().getNome());
-                System.out.println("Agência: " + conta.getAgencia());
-                System.out.println("Conta: " + conta.getConta());
-                System.out.println("-------------------------");
+        try {
+            ContaBancariaDao contaBancariaDao = new ContaBancariaDao();
+            List<ContaBancaria> contas = contaBancariaDao.listarContas(usuario);
+            if (contas != null) {
+                System.out.println("=== Lista de Contas Bancárias ===");
+                for (ContaBancaria conta : contas) {
+                    System.out.println("ID: " + conta.getId());
+                    System.out.println("Nome: " + conta.getNome());
+                    System.out.println("Banco: " + conta.getBanco().getNome());
+                    System.out.println("Agência: " + conta.getAgencia());
+                    System.out.println("Conta: " + conta.getConta());
+                    System.out.println("-------------------------");
+                }
+            } else {
+                System.out.println("Nenhuma conta bancária encontrada.");
             }
-        } else {
-            System.out.println("Nenhuma conta bancária encontrada.");
+            return contas;
+        } catch (ContaBancariaDaoException | BancoDaoException e) {
+            System.out.println(e.getMessage());
         }
-        return contas;
+
+        return null;
     }
 }

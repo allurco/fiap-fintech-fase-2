@@ -29,29 +29,29 @@ public class BancoDao {
         try {
             if (this.statement != null) {
                 this.statement.close();
+
+                if (this.connection != null) {
+                    this.connection.close();
+                }
             }
-            if (this.connection != null) {
-                this.connection.close();
-            }
+
         } catch (SQLException e) {
             throw new BancoDaoException("Erro ao fechar conexão: " + e.getMessage());
         }
 
     }
 
-    public void criarBanco(String id, String nome, String tipo) throws BancoDaoException {
+    public void criarBanco(String id, String nome, String codigo) throws BancoDaoException {
         try {
             String sql = "INSERT INTO bancos (id, nome, codigo) VALUES (?, ?, ?)";
             this.statement = connection.prepareStatement(sql);
             this.statement.setString(1, id);
             this.statement.setString(2, nome);
-            this.statement.setString(3, tipo);
+            this.statement.setString(3, codigo);
             this.statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new BancoDaoException("Erro ao cadastrar banco: " + e.getMessage());
-        } finally {
-            this.close();
         }
 
     }
