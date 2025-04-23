@@ -1,10 +1,10 @@
 package br.com.vidarica.menu;
 
 import br.com.vidarica.exceptions.UserNotFoundException;
-import br.com.vidarica.model.Banco;
-import br.com.vidarica.model.Usuario;
+import br.com.vidarica.model.*;
 import br.com.vidarica.services.BancosService;
 import br.com.vidarica.services.DespesasService;
+import br.com.vidarica.services.InvestimentoService;
 import br.com.vidarica.services.UsuarioService;
 
 import java.util.List;
@@ -22,6 +22,7 @@ public class Menu {
             System.out.println("1. Gestão de Usuários");
             System.out.println("2. Gestão de Bancos e Contas");
             System.out.println("3. Gestão de Despesas");
+            System.out.println("4. Gestão de Investimentos");
             System.out.println("0. Sair");
 
             opcao = scanner.nextInt();
@@ -36,6 +37,9 @@ public class Menu {
                 case 3:
                     this.despesasSubMenu();
                     break;
+                case 4:
+                    this.investimentosSubMenu();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -45,9 +49,47 @@ public class Menu {
         }
     }
 
-    private void usuarioSubmenu()
+    private void investimentosSubMenu()
     {
 
+
+        Scanner scanner = new Scanner(System.in);
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("=== Submenu de Investimentos ===");
+            System.out.println("1. Cadastrar Investimento");
+            System.out.println("2. Fazer Aporte");
+            System.out.println("3. Consultar Objetivo");
+            System.out.println("4. Ver Saldo Longo Prazo");
+            System.out.println("0. Voltar ao menu principal");
+
+            opcao = scanner.nextInt();
+            switch (opcao) {
+                case 1:
+                    this.cadastrarInvestimento();
+                    break;
+                case 2:
+                    this.fazerAporte();
+                    break;
+                case 3:
+                    this.consultarObjetivos();
+                    break;
+                case 4:
+                    this.verSaldoLongoPrazo();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
+
+            }
+        }
+    }
+
+    private void usuarioSubmenu()
+    {
 
         Scanner scanner = new Scanner(System.in);
         int opcao = -1;
@@ -362,4 +404,130 @@ public class Menu {
 
 
     }
+
+    public void cadastrarInvestimento() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Cadastro de Investimento ===");
+        System.out.print("Digite o email do usuário para o investimento: ");
+        String email = scanner.nextLine();
+
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+
+            System.out.print("Qual Conta? Escolha uma opção da lista:\n");
+            List<ContaBancaria> contas = BancosService.listarContasBancarias(usuario);
+            int opcaoConta = 1;
+
+            if (contas == null || contas.isEmpty()) {
+                System.out.println("Nenhum banco encontrado.");
+                return;
+            }
+
+            for (ContaBancaria conta : contas) {
+                System.out.println(opcaoConta + ". " + conta.getNome());
+                opcaoConta++;
+            }
+            int opcaoEscolhida = scanner.nextInt();
+            ContaBancaria contaEscolhida = contas.get(opcaoEscolhida - 1);
+
+            System.out.print("Tipo de Investimento: Digite 1 para objetivos ou 2 para longo prazo): ");
+            scanner.nextLine(); // Limpar o buffer do scanner
+            int tipoInvestimento = scanner.nextInt();
+
+            System.out.print("Nome do Investimento: ");
+            scanner.nextLine(); // Limpar o buffer do scanner
+            String nome = scanner.nextLine();
+            System.out.print("Aporte Incial: ");
+            double valor = scanner.nextDouble();
+
+            if (tipoInvestimento == 1 ) {
+                scanner.nextLine(); // Limpar o buffer do scanner
+                System.out.print("Descrição do Objetivo: ");
+                String descricao = scanner.nextLine();
+                System.out.print("Valor total do Investimento: ");
+                double valorFinal = scanner.nextDouble();
+
+                InvestimentoService.criarObjetivo(nome, descricao, valorFinal, valor, usuario, contaEscolhida);
+            } else if (tipoInvestimento == 2 ) {
+                System.out.print("Descrição do Investimento de longo prazo: ");
+                String descricao = scanner.nextLine();
+
+                InvestimentoService.criarInvestimentoLongoPrazo(nome, descricao, valor, usuario, contaEscolhida);
+            } else {
+                System.out.println("Tipo de investimento inválido. Tente novamente.");
+            }
+
+
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public void fazerAporte() {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Fazer Aporte ===");
+        System.out.print("Digite o email do usuário: ");
+        String email = scanner.nextLine();
+
+        try {
+            Usuario usuario = UsuarioService.consultarUsuarioPorEmail(email);
+
+
+            System.out.print("Tipo de Investimento: Digite 1 para objetivos ou 2 para longo prazo): ");
+            int tipoInvestimento = scanner.nextInt();
+
+            if (tipoInvestimento == 1) {
+                System.out.print("Qual Objetivo? Escolha uma opção da lista:\n");
+                List<Objetivo> objetivos = InvestimentoService.listarObjetivos(usuario);
+
+                int opcaoObjetivo = 1;
+                if (objetivos == null || objetivos.isEmpty()) {
+                    System.out.println("Nenhum objetivo encontrado.");
+                    return;
+                }
+
+                for (Objetivo objetivo : objetivos) {
+                    System.out.println(opcaoObjetivo + ". " + objetivo.getNome());
+                    opcaoObjetivo++;
+                }
+                int opcaoEscolhida = scanner.nextInt();
+                Objetivo objetivo = objetivos.get(opcaoEscolhida - 1);
+                System.out.print("Valor do aporte: ");
+                double valorAporte = scanner.nextDouble();
+                InvestimentoService.adicionarAporteObjetivo(valorAporte, objetivo);
+
+            } else if (tipoInvestimento == 2) {
+                System.out.print("Qual Longo Prazo? Escolha uma opção da lista:\n");
+                List<LongoPrazo> longoPrazos = InvestimentoService.listarLongoPrazo(usuario);
+                if (longoPrazos == null || longoPrazos.isEmpty()) {
+                    System.out.println("Nenhum longo prazo encontrado.");
+                    return;
+                }
+
+                int opcaoLongoPrazo = 1;
+                for (LongoPrazo longoPrazo : longoPrazos) {
+                    System.out.println(opcaoLongoPrazo + ". " + longoPrazo.getNome());
+                    opcaoLongoPrazo++;
+                }
+                int opcaoEscolhida = scanner.nextInt();
+                LongoPrazo longoPrazo = longoPrazos.get(opcaoEscolhida - 1);
+                System.out.print("Valor do aporte: ");
+                double valorAporte = scanner.nextDouble();
+                InvestimentoService.adicionarAporteLongoPrazo(valorAporte, longoPrazo);
+
+            }
+
+        } catch (UserNotFoundException e) {
+            System.out.println("Usuário não encontrado. Tente outro email. ");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+    public void consultarObjetivos() {}
+    public void verSaldoLongoPrazo() {}
 }

@@ -25,12 +25,12 @@ public abstract class Investimento {
         System.out.println("Alterou nome: " + nome );
     }
 
-    public double getValor() {
-        return this.valor;
-    }
-
     public String toString(){
         return "Investimento para: " + this.nome + " para: " + this.usuario.getEmail() + " com o valor mensal de: R$" + this.valor;
+    }
+
+    public double getValor() {
+        return this.valor;
     }
 
     public String getId() {

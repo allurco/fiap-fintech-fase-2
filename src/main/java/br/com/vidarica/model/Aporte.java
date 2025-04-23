@@ -1,15 +1,18 @@
 package br.com.vidarica.model;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Aporte {
     private String id;
     private Double valor;
+    private LocalDate dataDoAporte;
     private Objetivo objetivo;
     private LongoPrazo longoPrazo;
 
-    public Aporte(double valor, Investimento investimento) {
+    public Aporte(double valor) {
         this.id = UUID.randomUUID().toString();
+        this.dataDoAporte = LocalDate.now();
         this.valor = valor;
     }
 
@@ -26,6 +29,10 @@ public class Aporte {
 
     public Double getValor() {
         return valor;
+    }
+
+    public LocalDate getDataDoAporte() {
+        return dataDoAporte;
     }
 
     public Objetivo getObjetivo() {

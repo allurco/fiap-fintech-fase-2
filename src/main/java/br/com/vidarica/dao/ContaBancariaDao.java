@@ -2,6 +2,7 @@ package br.com.vidarica.dao;
 
 import br.com.vidarica.exceptions.BancoDaoException;
 import br.com.vidarica.exceptions.ContaBancariaDaoException;
+import br.com.vidarica.exceptions.UsuarioDaoException;
 import br.com.vidarica.factories.ConnectionFactory;
 import br.com.vidarica.model.Banco;
 import br.com.vidarica.model.ContaBancaria;
@@ -106,5 +107,39 @@ public class ContaBancariaDao {
         }
 
 
+    }
+
+    public ContaBancaria buscarContaBancaria(String field, String value) throws ContaBancariaDaoException, BancoDaoException, UsuarioDaoException {
+        String sql = "SELECT * FROM contas_bancarias WHERE " + field + " = ?";
+        try {
+            this.statement = connection.prepareStatement(sql);
+            this.statement.setString(1, value);
+            ResultSet rs = this.statement.executeQuery();
+
+            if (rs.next()) {
+                UsuarioDao usuarioDao = new UsuarioDao();
+                Usuario usuario = usuarioDao.getUsuario("id", rs.getString("usuarios_id"));
+
+                BancoDao bancoDao = new BancoDao();
+                Banco banco = bancoDao.buscarBanco("id", rs.getString("bancos_id"));
+                return new ContaBancaria(
+                        rs.getString("id"),
+                        rs.getString("nome"),
+                        rs.getString("tipo"),
+                        usuario,
+                        rs.getString("conta"),
+                        rs.getInt("digito_conta"),
+                        rs.getString("agencia"),
+                        rs.getInt("digito_agencia"),
+                        banco
+                );
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new ContaBancariaDaoException("Erro ao buscar conta bancária: " + e.getMessage());
+        } finally {
+            this.close();
+        }
     }
 }
